@@ -1,0 +1,17 @@
+%bec_coupling_constant value
+bec_coupling_constant 0
+
+%gauss posX posY sigmaX sigmaY impulseX impulseY
+%gauss 100 150 200 400 1 0
+%gauss 400 150 200 400 -1 0
+gauss 250 150 300 400 0 0
+
+%plainwave_horizontal posx posy width height impulse
+%plainwave_vertical posx posy width height impulse
+%plainwave_vertical 200 125 100 50 1
+
+%constant posX posY width height
+%constant 200 125 100 50
+
+%grayscaleblit posX posY filename
+%grayscaleblit 1 1 wf.png
