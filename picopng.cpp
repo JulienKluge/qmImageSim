@@ -534,24 +534,44 @@ int decodePNG(std::vector<unsigned char>& out_image, unsigned long& image_width,
   return decoder.error;
 }
 
-void loadFile(std::vector<unsigned char>& buffer, const std::string& filename) //designed for loading files from hard disk in an std::vector
+std::vector<unsigned char> load_file(std::string const& filepath)
 {
-  std::ifstream file(filename.c_str(), std::ios::in|std::ios::binary|std::ios::ate);
+    std::ifstream ifs(filepath, std::ios::binary | std::ios::ate);
 
-  //get filesize
-  std::streamsize size = 0;
-  if(file.seekg(0, std::ios::end).good()) size = file.tellg();
-  if(file.seekg(0, std::ios::beg).good()) size -= file.tellg();
+    if(!ifs)
+        throw std::runtime_error(filepath + ": error");
 
-  //read contents of the file into the vector
-  if(size > 0)
-  {
-    buffer.resize((size_t)size);
-    file.read((char*)(&buffer[0]), size);
-  }
-  else buffer.clear();
+    auto end = ifs.tellg();
+    ifs.seekg(0, std::ios::beg);
+
+    auto size = std::size_t(end - ifs.tellg());
+
+    if(size == 0) // avoid undefined behavior
+        return {};
+
+    std::vector<unsigned char> buffer(size);
+
+    if(!ifs.read((char*)buffer.data(), buffer.size()))
+        throw std::runtime_error(filepath + ": error");
+
+    return buffer;
 }
 
+void loadFile2(std::vector<unsigned char>& buffer, const std::string& fileName)
+{
+  std::cout << fileName << std::endl;
+	std::ifstream file(fileName, std::ios::in | std::ios::binary | std::ios::ate);
+	std::cout << "This shit" << std::endl;
+  std::streamsize size = file.tellg();
+	file.seekg(0, std::ios::beg);
+
+  std::cout << size << std::endl;
+  buffer.resize(size);
+	if (!file.read((char*)(&buffer[0]), size))
+	{
+		std::cout << "error while reading file" << std::endl;
+	}
+}
 
 /*
 int main(int argc, char *argv[])
